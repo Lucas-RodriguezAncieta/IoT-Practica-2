@@ -1,55 +1,75 @@
 #include <Arduino.h>
 
 #include "LedController.h"
-#include "WiFiConnection.h"
 #include "TcpActuatorClient.h"
+#include "WiFiConnection.h"
 
-// Pines de LEDs
-constexpr uint8_t RED_PIN = 25;
-constexpr uint8_t YELLOW_PIN = 26;
-constexpr uint8_t GREEN_PIN = 27;
+#if __has_include("WiFiSecrets.h")
+#include "WiFiSecrets.h"
+#else
+#include "WiFiSecrets.example.h"
+#endif
 
-// Credenciales WiFi
-const char* WIFI_SSID = "TU_WIFI";
-const char* WIFI_PASSWORD = "TU_PASSWORD";
+namespace {
 
-// Servidor TCP
-const char* SERVER_IP = "192.168.1.50";
-constexpr uint16_t SERVER_PORT = 5000;
+constexpr uint8_t kRed = 25;
+constexpr uint8_t kYellow = 26;
+constexpr uint8_t kGreen = 27;
 
-LedController ledController(
-    RED_PIN,
-    YELLOW_PIN,
-    GREEN_PIN
+constexpr unsigned long kRetry = 2000UL;
+constexpr unsigned long kTcpTimeout = 100UL;
+
+LedController leds(
+    kRed,
+    kYellow,
+    kGreen
 );
 
-WiFiConnection wifiConnection(
-    WIFI_SSID,
-    WIFI_PASSWORD
+WiFiConnection wifi(
+    kWifiSsid,
+    kWifiPassword,
+    kRetry
 );
 
-TcpActuatorClient tcpClient(
-    SERVER_IP,
-    SERVER_PORT,
-    ledController
+TcpActuatorClient tcp(
+    kServerIp,
+    kServerPort,
+    leds,
+    kRetry,
+    kTcpTimeout
 );
+
+}
 
 void setup() {
     Serial.begin(115200);
 
-    ledController.begin();
-    wifiConnection.begin();
-    tcpClient.begin();
+    Serial.println("[ACTUATOR] Iniciando...");
 
-    Serial.println("Actuator client started");
+    leds.begin();
+
+    Serial.println("[ACTUATOR] LEDs apagados");
+
+    if (kUsingExampleWiFiSecrets) {
+        Serial.println(
+            "[ACTUATOR] Configure WiFiSecrets.h antes de conectar"
+        );
+    } else {
+        wifi.begin();
+    }
 }
 
 void loop() {
-    wifiConnection.update();
+    unsigned long now = millis();
 
-    if (wifiConnection.isConnected()) {
-        tcpClient.update();
+    leds.update(now);
+
+    if (!kUsingExampleWiFiSecrets) {
+        wifi.update(now);
+
+        tcp.update(
+            now,
+            wifi.isConnected()
+        );
     }
-
-    ledController.update();
 }

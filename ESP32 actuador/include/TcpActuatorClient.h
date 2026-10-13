@@ -1,37 +1,52 @@
 #pragma once
 
 #include <Arduino.h>
-#include <WiFi.h>
+#include <WiFiClient.h>
+
 #include "LedController.h"
 
 class TcpActuatorClient {
 public:
     TcpActuatorClient(
-        const char* serverIp,
-        uint16_t serverPort,
-        LedController& ledController
+        const char* ip,
+        uint16_t port,
+        LedController& leds,
+        unsigned long retryMs,
+        unsigned long connectTimeoutMs
     );
 
-    void begin();
-    void update();
-
-    bool isConnected() const;
+    void update(
+        unsigned long now,
+        bool wifiConnected
+    );
 
 private:
-    WiFiClient client;
+    void disconnect(unsigned long now);
 
-    const char* serverIp;
-    uint16_t serverPort;
+    void processLine(
+        const char* line,
+        unsigned long now
+    );
 
-    LedController& ledController;
+    bool sendLine(const char* line);
 
-    unsigned long lastReconnectAttempt;
+    const char* ip_;
+    uint16_t port_;
 
-    void connect();
-    void registerActuator();
+    LedController& leds_;
 
-    void processIncomingMessages();
-    void processMessage(const String& message);
+    unsigned long retryMs_;
+    unsigned long timeoutMs_;
 
-    void sendAck(const char* stateName);
+    unsigned long lastAttempt_ = 0;
+    unsigned long lastCommand_ = 0;
+
+    bool registered_ = false;
+    bool waitingOk_ = false;
+    bool discarding_ = false;
+
+    char buffer_[129]{};
+    size_t length_ = 0;
+
+    WiFiClient client_;
 };

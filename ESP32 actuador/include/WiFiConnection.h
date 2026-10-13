@@ -1,22 +1,26 @@
 #pragma once
 
 #include <Arduino.h>
-#include <WiFi.h>
 
 class WiFiConnection {
 public:
-    WiFiConnection(const char* ssid, const char* password);
+    WiFiConnection(
+        const char* ssid,
+        const char* password,
+        unsigned long retryMs
+    );
 
     void begin();
-    void update();
+    void update(unsigned long now);
 
     bool isConnected() const;
 
 private:
-    const char* ssid;
-    const char* password;
+    const char* ssid_;
+    const char* password_;
 
-    unsigned long lastReconnectAttempt;
+    unsigned long retryMs_;
+    unsigned long lastAttempt_ = 0;
 
-    void connect();
+    bool wasConnected_ = false;
 };

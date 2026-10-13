@@ -3,30 +3,35 @@
 #include <Arduino.h>
 
 enum class LedState {
-    INVALID,
     DANGER,
     WARNING,
-    SAFE
+    SAFE,
+    INVALID
 };
 
 class LedController {
 public:
-    LedController(uint8_t redPin, uint8_t yellowPin, uint8_t greenPin);
+    LedController(
+        uint8_t redPin,
+        uint8_t yellowPin,
+        uint8_t greenPin
+    );
 
     void begin();
-    void setState(LedState newState);
-    void update();
+    void setState(LedState state, unsigned long nowMs);
+    void update(unsigned long nowMs);
+
+    LedState state() const;
 
 private:
-    uint8_t redPin;
-    uint8_t yellowPin;
-    uint8_t greenPin;
+    void writeOutputs(bool red, bool yellow, bool green);
 
-    LedState currentState;
+    uint8_t redPin_;
+    uint8_t yellowPin_;
+    uint8_t greenPin_;
 
-    unsigned long lastBlinkTime;
-    bool blinkState;
+    LedState state_ = LedState::INVALID;
 
-    void turnAllOff();
-    void writeOutputs();
+    unsigned long phaseStartedAtMs_ = 0;
+    bool phaseOn_ = false;
 };

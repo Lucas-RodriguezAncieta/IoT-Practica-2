@@ -1,81 +1,81 @@
 #include "LedController.h"
 
-LedController::LedController(
-    uint8_t redPin,
-    uint8_t yellowPin,
-    uint8_t greenPin
-)
-    : redPin(redPin),
-      yellowPin(yellowPin),
-      greenPin(greenPin),
-      currentState(LedState::INVALID),
-      lastBlinkTime(0),
-      blinkState(false) {
+namespace {
+constexpr unsigned long kDangerMs = 150UL;
+constexpr unsigned long kWarningMs = 500UL;
 }
+
+LedController::LedController(
+    uint8_t r,
+    uint8_t y,
+    uint8_t g
+)
+    : redPin_(r),
+      yellowPin_(y),
+      greenPin_(g) {}
 
 void LedController::begin() {
-    pinMode(redPin, OUTPUT);
-    pinMode(yellowPin, OUTPUT);
-    pinMode(greenPin, OUTPUT);
+    pinMode(redPin_, OUTPUT);
+    pinMode(yellowPin_, OUTPUT);
+    pinMode(greenPin_, OUTPUT);
 
-    turnAllOff();
+    writeOutputs(false, false, false);
 }
 
-void LedController::setState(LedState newState) {
-    if (currentState == newState) {
+void LedController::setState(
+    LedState state,
+    unsigned long now
+) {
+    if (state_ == state) return;
+
+    state_ = state;
+    phaseStartedAtMs_ = now;
+
+    phaseOn_ =
+        state == LedState::DANGER ||
+        state == LedState::WARNING;
+
+    update(now);
+}
+
+void LedController::update(unsigned long now) {
+    if (state_ == LedState::SAFE) {
+        writeOutputs(false, false, true);
         return;
     }
 
-    currentState = newState;
-    blinkState = false;
-    lastBlinkTime = millis();
-
-    writeOutputs();
-}
-
-void LedController::update() {
-    unsigned long now = millis();
-
-    if (currentState == LedState::DANGER) {
-        if (now - lastBlinkTime >= 150) {
-            lastBlinkTime = now;
-            blinkState = !blinkState;
-            writeOutputs();
-        }
+    if (state_ == LedState::INVALID) {
+        writeOutputs(false, false, false);
+        return;
     }
 
-    if (currentState == LedState::WARNING) {
-        if (now - lastBlinkTime >= 500) {
-            lastBlinkTime = now;
-            blinkState = !blinkState;
-            writeOutputs();
-        }
+    const unsigned long interval =
+        state_ == LedState::DANGER
+            ? kDangerMs
+            : kWarningMs;
+
+    if (now - phaseStartedAtMs_ >= interval) {
+        phaseStartedAtMs_ = now;
+        phaseOn_ = !phaseOn_;
     }
+
+    writeOutputs(
+        state_ == LedState::DANGER && phaseOn_,
+        state_ == LedState::WARNING && phaseOn_,
+        false
+    );
 }
 
-void LedController::turnAllOff() {
-    digitalWrite(redPin, LOW);
-    digitalWrite(yellowPin, LOW);
-    digitalWrite(greenPin, LOW);
+LedState LedController::state() const {
+    return state_;
 }
 
-void LedController::writeOutputs() {
-    turnAllOff();
-
-    switch (currentState) {
-        case LedState::DANGER:
-            digitalWrite(redPin, blinkState ? HIGH : LOW);
-            break;
-
-        case LedState::WARNING:
-            digitalWrite(yellowPin, blinkState ? HIGH : LOW);
-            break;
-
-        case LedState::SAFE:
-            digitalWrite(greenPin, HIGH);
-            break;
-
-        case LedState::INVALID:
-            break;
-    }
+void LedController::writeOutputs(
+    bool r,
+    bool y,
+    bool g
+) {
+    digitalWrite(redPin_, r);
+    digitalWrite(yellowPin_, y);
+    digitalWrite(greenPin_, g);
 }

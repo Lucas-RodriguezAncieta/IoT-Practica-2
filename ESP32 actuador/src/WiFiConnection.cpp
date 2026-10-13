@@ -1,34 +1,47 @@
 #include "WiFiConnection.h"
 
+#include <WiFi.h>
+
 WiFiConnection::WiFiConnection(
     const char* ssid,
-    const char* password
+    const char* password,
+    unsigned long retryMs
 )
-    : ssid(ssid),
-      password(password),
-      lastReconnectAttempt(0) {
+    : ssid_(ssid),
+      password_(password),
+      retryMs_(retryMs) {
 }
 
 void WiFiConnection::begin() {
     WiFi.mode(WIFI_STA);
-    connect();
+
+    lastAttempt_ = millis() - retryMs_;
 }
 
-void WiFiConnection::connect() {
-    Serial.println("Connecting to WiFi...");
-    WiFi.begin(ssid, password);
-}
+void WiFiConnection::update(unsigned long now) {
+    if (isConnected()) {
+        if (!wasConnected_) {
+            Serial.println("[ACTUATOR] WiFi conectado");
 
-void WiFiConnection::update() {
-    if (WiFi.status() == WL_CONNECTED) {
+            Serial.print("[ACTUATOR] IP local: ");
+            Serial.println(WiFi.localIP());
+        }
+
+        wasConnected_ = true;
         return;
     }
 
-    unsigned long now = millis();
+    if (wasConnected_) {
+        Serial.println("[ACTUATOR] WiFi desconectado");
+        wasConnected_ = false;
+    }
 
-    if (now - lastReconnectAttempt >= 2000) {
-        lastReconnectAttempt = now;
-        connect();
+    if (now - lastAttempt_ >= retryMs_) {
+        lastAttempt_ = now;
+
+        Serial.println("[ACTUATOR] Conectando a WiFi...");
+
+        WiFi.begin(ssid_, password_);
     }
 }
 
