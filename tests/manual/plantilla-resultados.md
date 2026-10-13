@@ -1,7 +1,5 @@
 # Ficha de ejecución de prueba
 
-# Ficha de ejecución de prueba
-
 **Caso/ID:** M-01 — Integración y comunicación TCP/IP entre sensor, servidor y actuador.
 
 **Fecha y hora (UTC-4):** 11/10/2026 — Hora: 15:00.
