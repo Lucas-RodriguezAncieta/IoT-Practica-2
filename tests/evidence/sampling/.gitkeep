@@ -1,1 +1,35 @@
+# Prueba de frecuencia de muestreo
 
+**Requerimiento:** RNF4 — Frecuencia de adquisición de mediciones.
+
+## Objetivo
+Verificar que el ESP32 sensor mantenga una frecuencia de adquisición cercana al objetivo establecido de 5 lecturas por segundo.
+
+## Procedimiento
+1. Iniciar el ESP32 sensor.
+2. Establecer la conexión WiFi/TCP.
+3. Registrar las marcas de tiempo de cada lectura durante 60 segundos.
+4. Contabilizar la cantidad total de mediciones.
+5. Calcular la frecuencia promedio.
+6. Comparar el resultado con el objetivo declarado.
+
+## Parámetros
+
+| Parámetro | Valor objetivo |
+|---|---|
+| Intervalo programado | 200 ms |
+| Frecuencia objetivo | 5 Hz |
+| Duración de evaluación | 60 segundos |
+| Lecturas de referencia aproximadas | 300 |
+
+## Fórmula
+
+Frecuencia (Hz) = Número de lecturas / Tiempo transcurrido (s)
+
+## Criterio de aceptación
+Se verificará el cumplimiento de la frecuencia declarada de 5 Hz a partir de los registros temporales, diferenciando el intervalo programado de la frecuencia realmente alcanzada.
+
+## Resultado
+Pendiente de registrar la cantidad de lecturas, los intervalos reales y la frecuencia promedio.
+
+**Estado:** NO EJECUTADO (sin registros disponibles).
