@@ -1,0 +1,35 @@
+# Prueba de funcionamiento del ESP32 sensor
+
+**Requerimientos:** RF1 y RF4 — Medición de distancias y comunicación TCP.
+
+## Objetivo
+Verificar la adquisición de distancias mediante el sensor HC-SR04 y su transmisión hacia el servidor TCP mediante mensajes del protocolo de aplicación.
+
+## Procedimiento
+1. Verificar las conexiones GPIO18 (TRIG) y GPIO19 (ECHO), incluyendo el divisor de tensión.
+2. Iniciar el ESP32 y establecer conexión WiFi.
+3. Registrar el cliente mediante `REGISTER SENSOR`.
+4. Comprobar que el servidor responda `OK`.
+5. Realizar mediciones dentro del intervalo de 2 a 100 cm.
+6. Verificar el envío de mensajes `DISTANCE <valor>`.
+7. Provocar una lectura inválida y comprobar el envío de `INVALID`.
+8. Interrumpir la conexión y comprobar el mecanismo de reconexión.
+
+## Casos de validación
+
+| Caso | Resultado esperado |
+|---|---|
+| Conexión WiFi | Cliente conectado a la red |
+| Registro TCP | Respuesta `OK` |
+| Medición válida | Envío de `DISTANCE <valor>` |
+| Medición inválida | Envío de `INVALID` |
+| Desconexión TCP | Reintento de conexión |
+| Recuperación | Nuevo registro del sensor |
+
+## Criterio de aceptación
+El sensor debe obtener mediciones, transmitir los mensajes correctos y recuperar la conexión según los mecanismos establecidos.
+
+## Resultado
+La compilación PlatformIO del firmware está registrada en el informe técnico. La ejecución física de estos casos requiere los logs correspondientes.
+
+**Estado de validación física:** NO EJECUTADO (sin registros disponibles).
