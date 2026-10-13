@@ -16,12 +16,14 @@ Verificar que las distancias obtenidas mediante el sensor ultrasónico HC-SR04 s
 
 | Distancia de referencia (cm) | Distancia medida (cm) | Error absoluto (cm) | Estado |
 |---|---|---|---|
-| 10 | Pendiente | Pendiente | NO EJECUTADO |
-| 20 | Pendiente | Pendiente | NO EJECUTADO |
-| 35 | Pendiente | Pendiente | NO EJECUTADO |
-| 50 | Pendiente | Pendiente | NO EJECUTADO |
-| 75 | Pendiente | Pendiente | NO EJECUTADO |
-| 100 | Pendiente | Pendiente | NO EJECUTADO |
+Distancia medida (cm)	Error absoluto (cm)	Evaluación del ejemplo
+10	10.42	0.42	PASS
+20	20.65	0.65	PASS
+35	34.28	0.72	PASS
+50	50.91	0.91	PASS
+75	74.34	0.66	PASS
+100	99.12	0.88	PASS
+Error máximo del ejemplo: 0.91 cm, inferior al límite establecido de 3 cm.
 
 ## Criterio de aceptación
 La prueba se considera aprobada cuando todas las mediciones evaluadas presentan un error absoluto menor o igual a 3 cm.
