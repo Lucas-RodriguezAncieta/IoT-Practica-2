@@ -16,15 +16,14 @@ Verificar que el sistema distribuido mantenga su funcionamiento durante un perí
 
 ## Registro de observaciones
 
-| Tiempo transcurrido | Estado del sensor | Estado del servidor | Estado del actuador |
-|---|---|---|---|
-| 0 s | Pendiente | Pendiente | Pendiente |
-| 120 s | Pendiente | Pendiente | Pendiente |
-| 240 s | Pendiente | Pendiente | Pendiente |
-| 360 s | Pendiente | Pendiente | Pendiente |
-| 480 s | Pendiente | Pendiente | Pendiente |
-| 600 s | Pendiente | Pendiente | Pendiente |
-
+Tiempo	Sensor	Servidor Python	Actuador
+0 s	Conectado	Operativo	Conectado
+120 s	Conectado	Operativo	Conectado
+240 s	Conectado	Operativo	Conectado
+360 s	Conectado	Operativo	Conectado
+480 s	Conectado	Operativo	Conectado
+600 s	Conectado	Operativo	Conectado
+En este escenario de ejemplo, los tres componentes permanecen activos durante 600 segundos, sin reinicios ni bloqueos.
 ## Criterio de aceptación
 El sistema debe completar al menos 600 segundos de operación continua sin reinicios ni bloqueos. Cualquier desconexión o recuperación debe documentarse y analizarse.
 
