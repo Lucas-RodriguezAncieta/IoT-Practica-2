@@ -1,4 +1,4 @@
-.1. Validación del ESP32 sensor ultrasónico
+4.1. Validación del ESP32 sensor ultrasónico
 
 Objetivo: Verificar el funcionamiento del ESP32 encargado de medir distancias mediante el sensor ultrasónico HC-SR04 y transmitir las mediciones al servidor utilizando comunicación TCP/IP sobre una red WiFi.
 
