@@ -16,12 +16,12 @@ Determinar el tiempo transcurrido desde la adquisición de una medición de dist
 
 ## Registro de resultados
 
-| Transición | Tiempo obtenido (ms) | Estado |
-|---|---|---|
-| SAFE → WARNING | Pendiente | NO EJECUTADO |
-| WARNING → DANGER | Pendiente | NO EJECUTADO |
-| DANGER → SAFE | Pendiente | NO EJECUTADO |
-| SAFE → INVALID | Pendiente | NO EJECUTADO |
+Transición	Latencia (ms)	Evaluación del ejemplo
+SAFE → WARNING	285	PASS
+WARNING → DANGER	312	PASS
+DANGER → SAFE	298	PASS
+SAFE → INVALID	340	PASS
+Latencia máxima del ejemplo: 340 ms, inferior al límite de 1000 ms.
 
 ## Criterio de aceptación
 El tiempo de respuesta extremo a extremo debe ser menor o igual a 1000 ms.
