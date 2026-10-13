@@ -1,1 +1,48 @@
+# Prueba y validación del servidor TCP en Python
 
+**Requerimientos:** RF2, RF4, RF6 y RF7.
+
+## Objetivo
+Verificar el procesamiento de mediciones, clasificación de distancias, manejo de conexiones TCP y validación del protocolo de aplicación implementado en Python.
+
+## Procedimiento
+1. Iniciar el servidor TCP en el puerto 5000.
+2. Comprobar el registro de clientes mediante `REGISTER SENSOR` y `REGISTER ACTUATOR`.
+3. Verificar el procesamiento de mensajes `DISTANCE`.
+4. Evaluar la clasificación de distancias.
+5. Comprobar los comandos `SET` enviados al actuador.
+6. Evaluar el tratamiento de mensajes incorrectos.
+7. Verificar la gestión de desconexiones y estados inválidos.
+8. Ejecutar la suite automatizada mediante pytest.
+
+## Rangos de clasificación
+
+| Distancia recibida | Estado esperado |
+|---|---|
+| 2 ≤ d < 20 cm | DANGER |
+| 20 ≤ d < 50 cm | WARNING |
+| 50 ≤ d ≤ 100 cm | SAFE |
+| Lectura fuera de rango | INVALID |
+
+## Resultados automatizados registrados en el informe
+
+| Parámetro | Resultado |
+|---|---|
+| Lenguaje | Python |
+| Herramienta | pytest |
+| Pruebas aprobadas | 24 |
+| Pruebas fallidas | 0 |
+| Fecha registrada | 12/10/2026 |
+| Estado reportado | APROBADO |
+
+## Análisis
+
+El informe técnico registra una ejecución local de 24 pruebas automatizadas aprobadas y ninguna fallida.
+
+Este resultado constituye evidencia favorable de los componentes del servidor evaluados mediante pytest, pero no sustituye la ejecución del sistema físico completo.
+
+## Evidencias
+
+Se debe adjuntar el registro original de pytest y, cuando corresponda, los logs de conexión y procesamiento del servidor.
+
+**Estado:** Validación automatizada reportada como APROBADA; evidencia original pendiente de adjuntar.
