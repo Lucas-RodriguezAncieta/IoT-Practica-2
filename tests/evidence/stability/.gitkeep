@@ -1,1 +1,34 @@
+# Prueba de estabilidad del sistema
 
+**Requerimiento:** RNF1 — Estabilidad y funcionamiento continuo.
+
+## Objetivo
+Verificar que el sistema distribuido mantenga su funcionamiento durante un período mínimo de 600 segundos sin reinicios ni bloqueos.
+
+## Procedimiento
+1. Iniciar el servidor TCP.
+2. Conectar el ESP32 sensor y el ESP32 actuador.
+3. Confirmar el registro de ambos clientes.
+4. Mantener el sistema operando durante 10 minutos.
+5. Registrar periódicamente el estado de los tres componentes.
+6. Documentar cualquier interrupción, bloqueo, reinicio o desconexión.
+7. Evaluar el cumplimiento del tiempo mínimo establecido.
+
+## Registro de observaciones
+
+| Tiempo transcurrido | Estado del sensor | Estado del servidor | Estado del actuador |
+|---|---|---|---|
+| 0 s | Pendiente | Pendiente | Pendiente |
+| 120 s | Pendiente | Pendiente | Pendiente |
+| 240 s | Pendiente | Pendiente | Pendiente |
+| 360 s | Pendiente | Pendiente | Pendiente |
+| 480 s | Pendiente | Pendiente | Pendiente |
+| 600 s | Pendiente | Pendiente | Pendiente |
+
+## Criterio de aceptación
+El sistema debe completar al menos 600 segundos de operación continua sin reinicios ni bloqueos. Cualquier desconexión o recuperación debe documentarse y analizarse.
+
+## Resultado
+Pendiente de registrar los tiempos de ejecución y las incidencias observadas.
+
+**Estado:** NO EJECUTADO (sin registros disponibles).
