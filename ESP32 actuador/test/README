@@ -1,11 +1,57 @@
+4.2. Validación del ESP32 actuador
 
-This directory is intended for PlatformIO Test Runner and project tests.
+Objetivo: Verificar que el ESP32 actuador reciba e interprete correctamente los comandos enviados por el servidor TCP y controle los tres LEDs de acuerdo con el estado de proximidad determinado.
 
-Unit Testing is a software testing method by which individual units of
-source code, sets of one or more MCU program modules together with associated
-control data, usage procedures, and operating procedures, are tested to
-determine whether they are fit for use. Unit testing finds problems early
-in the development cycle.
+Procedimiento de validación:
 
-More information about PlatformIO Unit Testing:
-- https://docs.platformio.org/en/latest/advanced/unit-testing/index.html
+Comprobar las conexiones de los LEDs rojo, amarillo y verde a los GPIO25, GPIO26 y GPIO27, respectivamente, utilizando resistencias de 220 Ω.
+
+Configurar el ESP32 actuador para conectarse a la misma red WiFi que el servidor.
+
+Verificar el establecimiento de la conexión TCP y el registro mediante REGISTER ACTUATOR.
+
+Enviar desde el servidor los comandos correspondientes a los estados DANGER, WARNING, SAFE e INVALID.
+
+Comprobar que cada comando produzca exclusivamente el comportamiento LED definido.
+
+Verificar que el actuador envíe el mensaje ACK <estado> después de aplicar un comando válido.
+
+Comprobar que, ante una pérdida de comunicación o ausencia de comandos durante 1,5 segundos, se adopte el estado INVALID y se apaguen todos los LEDs.
+
+Criterios de validación:
+
+Comando recibido
+
+Comportamiento esperado
+
+SET DANGER
+
+LED rojo parpadea: 150 ms encendido y 150 ms apagado
+
+SET WARNING
+
+LED amarillo parpadea: 500 ms encendido y 500 ms apagado
+
+SET SAFE
+
+LED verde encendido permanentemente
+
+SET INVALID
+
+Todos los LEDs apagados
+
+Pérdida de comandos durante 1,5 s
+
+Estado INVALID
+
+Comando válido procesado
+
+Envío de ACK <estado>
+
+Resultado documentado:
+
+El firmware del ESP32 actuador cuenta con una compilación PlatformIO exitosa. El controlador de LEDs está implementado mediante una lógica no bloqueante basada en millis(), permitiendo ejecutar los patrones de iluminación y mantener la comunicación TCP.
+
+También se encuentran implementados el procesamiento de comandos, el envío de confirmaciones y los mecanismos de seguridad ante interrupciones de comunicación.
+
+La comprobación física debe registrar la respuesta observada de cada LED y el comportamiento frente a desconexiones.
