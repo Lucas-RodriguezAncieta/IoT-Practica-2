@@ -32,4 +32,4 @@ La suite Python está en `test_distance_controller.py` y `test_tcp_server.py`. S
 Server TCP\\.venv\\Scripts\\python.exe -m pytest tests/automated -q
 ```
 
-El 12 de octubre de 2026 se ejecutaron 24 pruebas locales y todas aprobaron. Cubren clasificación y límites, parser, errores, registro por rol, fragmentación y concatenación de líneas TCP, expiración publicada al actuador, desconexión y re-registro de ambos roles, recuperación tras entradas inválidas y trazabilidad de `SET`/`ACK`. No sustituyen las pruebas físicas: exactitud, estabilidad de 10 minutos, frecuencia real de muestreo y tiempo extremo a extremo siguen pendientes de evidencia manual.
+El 11 de octubre de 2026 se ejecutaron 24 pruebas locales y todas aprobaron. Cubren clasificación y límites, parser, errores, registro por rol, fragmentación y concatenación de líneas TCP, expiración publicada al actuador, desconexión y re-registro de ambos roles, recuperación tras entradas inválidas y trazabilidad de `SET`/`ACK`. No sustituyen las pruebas físicas: exactitud, estabilidad de 10 minutos, frecuencia real de muestreo y tiempo extremo a extremo siguen pendientes de evidencia manual.
