@@ -1,0 +1,5 @@
+﻿estado,comando,led_esperado,on_esperado_ms,off_esperado_ms,encendido_ms,apagado_ms,ack,exclusividad
+DANGER,SET DANGER,Rojo,150,150,152,149,ACK DANGER,Amarillo OFF; Verde OFF
+WARNING,SET WARNING,Amarillo,500,500,503,498,ACK WARNING,Rojo OFF; Verde OFF
+SAFE,SET SAFE,Verde,,,ON fijo,ON fijo,ACK SAFE,Rojo OFF; Amarillo OFF
+INVALID,SET INVALID,Ninguno,,,OFF,OFF,ACK INVALID,Todos OFF

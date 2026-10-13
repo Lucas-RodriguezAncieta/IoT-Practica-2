@@ -67,7 +67,7 @@ def main() -> None:
             )
         else:
             required_guards = (
-                r"if\s*\(\s*kUsingExampleWiFiSecrets\s*\).*else\s+wifi\.begin\(\)",
+                r"if\s*\(\s*kUsingExampleWiFiSecrets\s*\)\s*(?:\{[\s\S]*?\}|[^\r\n;]*;)\s*else\s*(?:\{\s*)?wifi\.begin\(\)",
                 r"if\s*\(\s*!kUsingExampleWiFiSecrets\s*\)\s*\{\s*wifi\.update[\s\S]*tcp\.update",
             )
         for guard in required_guards:

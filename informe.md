@@ -1,32 +1,34 @@
 # Informe técnico — Práctica 2
 
-> **Estado del documento:** los firmwares de sensor y actuador, incluidos WiFi/TCP, están implementados y cuentan con compilación PlatformIO registrada. El servidor TCP cuenta con validación automatizada local. Unity en placa, pruebas físicas e integración real siguen pendientes.
+> **Estado del documento:** los firmwares de sensor y actuador, incluidos WiFi/TCP, están implementados y su compilación PlatformIO normal fue verificada el 13 de octubre de 2026. El servidor TCP cuenta con validación automatizada local. Los once CSV de `tests/evidence/` son los registros oficiales de las pruebas físicas, según confirmación del equipo. Unity en placa y evidencias complementarias no incluidas en el repositorio no se declaran disponibles.
 
-## Integrantes y responsabilidades iniciales
+## Integrantes y responsabilidades
 
-| Integrante | Responsabilidad inicial | Evidencia futura |
-|---|---|---|
-| Nombre pendiente | ESP32 sensor | Código, montaje, logs y pruebas del sensor |
-| Nombre pendiente | ESP32 actuador | Código, montaje, evidencia LED y pruebas del actuador |
-| Nombre pendiente | Servidor TCP | Código, logs del servidor y pruebas de protocolo |
+| Área de trabajo | Evidencia disponible |
+|---|---|
+| ESP32 sensor | Código fuente, pruebas Unity previstas y CSV de RF1, RNF2 y RNF4. |
+| ESP32 actuador | Código fuente y CSV de RF3. |
+| Servidor TCP | Código fuente, suite pytest y CSV de RF2, RF4, RF6 y RF7. |
+
+Las fuentes disponibles no vinculan estas áreas con integrantes identificados individualmente. La asignación nominal y su respaldo en el historial de commits deben completarse por el equipo antes de la defensa, sin atribuir responsabilidades no documentadas.
 
 ## 1. Requerimientos funcionales y no funcionales
 
-| ID | Origen | Requisito | Responsable | Prueba prevista | Estado |
-|---|---|---|---|---|---|
-| RF1 | Práctica 2 §3.1; P1 RF-01 | Medir distancia con HC-SR04 en cm. | ESP32 sensor | M-02, M-03, M-06, M-09 | Pendiente |
-| RF2 | Práctica 2 §3.1; P1 RF-02 | El servidor clasifica sin redondear: DANGER `[2,20)`, WARNING `[20,50)`, SAFE `[50,100]`; fuera de rango es INVALID. | Servidor TCP | M-02 | Pendiente |
-| RF3 | Práctica 2 §3.1; P1 RF-03/RF-05 | El actuador representa solo el `SET` recibido: rojo 150/150 ms, amarillo 500/500 ms, verde fijo; INVALID apaga todos. | ESP32 actuador | M-02, M-04, M-05, M-08, M-09 | Pendiente |
-| RF4 | Práctica 2 §3.1 | Sensor y actuador se conectan por WiFi al servidor mediante TCP y el protocolo definido. | Tres componentes | M-01, M-05, M-08, M-11 | Pendiente |
-| RF5 | P1 RF-04 | La operación debe continuar durante muestreo y parpadeo. | Sensor y actuador | M-04, M-05, M-07 | Pendiente |
-| RF6 | Decisión del grupo | El servidor es la única autoridad de clasificación; el sensor informa y el actuador no reclasifica. | Servidor TCP | M-01, M-02 | Pendiente |
-| RF7 | Decisión del grupo | Mensaje malformado: responder `ERROR <reason>`, registrar el evento, conservar conexión y no ejecutar acción. | Servidor TCP | M-11 | Pendiente |
-| RNF1 | Práctica 2 §3.2 | Estabilidad: operación continua por al menos 10 min sin reinicio ni bloqueo. | Tres componentes | M-07 | Pendiente |
-| RNF2 | Práctica 2 §3.2 | Exactitud: error máximo ≤ ±3 cm dentro de 2–100 cm frente a referencia física. | ESP32 sensor | M-03 | Pendiente |
-| RNF3 | Práctica 2 §3.2 | Respuesta extremo a extremo ≤ 1 s, sensor → servidor → actuador. | Tres componentes | M-08 | Pendiente |
-| RNF4 | Decisión del grupo; Práctica 2 §3.2 | Frecuencia objetivo de 5 lecturas/s (una lectura cada 200 ms); supera la referencia docente de ≥ 2 lecturas/s. | ESP32 sensor | M-06 | Pendiente |
+| ID | Requisito | Responsable | Prueba prevista | Estado |
+|---|---|---|---|---|
+| RF1 | Medir distancia con HC-SR04 en cm. | ESP32 sensor | M-02, M-03, M-06, M-09 | Cumplido: código de adquisición y 60 registros en `sensor/RF1_medicion_distancia.csv`; la exactitud se respalda específicamente en RNF2. |
+| RF2 | El servidor clasifica sin redondear: DANGER `[2,20)`, WARNING `[20,50)`, SAFE `[50,100]`; fuera de rango es INVALID. | Servidor TCP | M-02 | Cumplido: 11 casos coincidentes, incluidos 2, 20, 50, 100 y valores fuera de rango, en `tcp/RF2_clasificacion_servidor.csv`. |
+| RF3 | El actuador representa solo el `SET` recibido: rojo 150/150 ms, amarillo 500/500 ms, verde fijo; INVALID apaga todos. | ESP32 actuador | M-02, M-04, M-05, M-08, M-09 | Cumplido: cuatro estados registrados con comandos, ACK y exclusividad en `actuator/RF3_actuador_estados.csv`. |
+| RF4 | Sensor y actuador se conectan por WiFi al servidor mediante TCP y el protocolo definido. | Tres componentes | M-01, M-05, M-08, M-11 | Cumplido: secuencia de cinco mensajes de registro, distancia, SET y ACK en `tcp/RF4_comunicacion_tcp.csv`. |
+| RF5 | La operación debe continuar durante muestreo y parpadeo. | Sensor y actuador | M-04, M-05, M-07 | Cumplido: siete observaciones de 0 a 30 s registran 5 lecturas/s y parpadeo sin bloqueo en `stability/RF5_operacion_continua.csv`. |
+| RF6 | El servidor es la única autoridad de clasificación; el sensor informa y el actuador no reclasifica. | Servidor TCP | M-01, M-02 | Cumplido: tres entradas muestran al servidor como autoridad y al actuador aplicando `SET` en `tcp/RF6_autoridad_clasificacion.csv`. |
+| RF7 | Mensaje malformado: responder `ERROR <reason>`, registrar el evento, conservar conexión y no ejecutar acción. | Servidor TCP | M-11 | Cumplido: seis mensajes inválidos documentan ERROR, conexión conservada y recuperación en `tcp/RF7_mensajes_malformados.csv`. |
+| RNF1 | Estabilidad: operación continua por al menos 10 min sin reinicio ni bloqueo. | Tres componentes | M-07 | Cumplido: registro hasta 600 s sin reinicios, bloqueos ni desconexiones no recuperadas en `stability/RNF1_estabilidad_10min.csv`. |
+| RNF2 | Exactitud: error máximo ≤ ±3 cm dentro de 2–100 cm frente a referencia física. | ESP32 sensor | M-03 | Cumplido: 50 mediciones; error absoluto máximo 0,66 cm en `accuracy/RNF2_exactitud.csv`. |
+| RNF3 | Respuesta extremo a extremo ≤ 1 s, sensor → servidor → actuador. | Tres componentes | M-08 | Cumplido: 10 transiciones; latencia total entre 40 y 72 ms en `latency/RNF3_latencia_extremo_a_extremo.csv`. |
+| RNF4 | Frecuencia objetivo de 5 lecturas/s (una lectura cada 200 ms); supera la referencia docente de ≥ 2 lecturas/s. | ESP32 sensor | M-06 | Cumplido: 307 intentos en 60 s, promedio 5,117 intentos/s, en `sampling/RNF4_frecuencia_muestreo.csv`. |
 
-Las fronteras son contiguas: 2.00 cm y 100.00 cm son válidas; 20.00 cm es WARNING y 50.00 cm es SAFE. No se redondea antes de clasificar.
+Las fronteras son contiguas: 2,00 cm y 100,00 cm son válidas; 20,00 cm es WARNING y 50,00 cm es SAFE. No se redondea antes de clasificar. Los estados de la tabla se fundamentan en el código, las validaciones automatizadas ejecutadas localmente y los CSV físicos confirmados por el equipo; esta revisión no reprodujo el montaje ni los ensayos físicos.
 
 ## 2. Análisis y diseño
 
@@ -170,7 +172,7 @@ classDiagram
 
 Los tres diagramas reflejan clases implementadas. `SensorWiFiConnection` y `ActuatorWiFiConnection` representan dos implementaciones homónimas ubicadas en proyectos distintos; no son una clase compartida. Los atributos privados se omiten deliberadamente cuando no son necesarios para explicar relaciones públicas.
 
-Todos los clientes TCP, el actuador y el servidor están implementados. La compilación registrada cubre ambos firmwares; la ejecución Unity en placa y la integración física siguen pendientes.
+Todos los clientes TCP, el actuador y el servidor están implementados. La compilación normal de ambos firmwares fue verificada el 13 de octubre de 2026; los registros de pruebas físicas están organizados en `tests/evidence/` y la ejecución Unity en placa sigue pendiente.
 
 ### 2.6 Configuración TCP y WiFi local
 
@@ -218,68 +220,69 @@ El servidor se implementó en `Server TCP/`: `TcpServer` gestiona conexiones con
 
 [main.cpp](ESP32%20sensor/src/main.cpp) inicia Serial a 115200 baudios y programa un intento cada 200 ms mediante `millis()`. Coordina [WiFiConnection](ESP32%20sensor/include/WiFiConnection.h), que solicita WiFi de forma no bloqueante y reintenta cada 2 s, y [TcpSensorClient](ESP32%20sensor/include/TcpSensorClient.h), que intenta TCP con timeout de 100 ms, envía `REGISTER SENSOR`, espera `OK` y recién entonces transmite `DISTANCE <valor>` o `INVALID`. Tras caída WiFi/TCP se descarta el registro y se repite el ciclo de conexión/registro. El receptor del cliente separa líneas `\n` fragmentadas o acumuladas y descarta una respuesta mayor de 128 bytes. La distancia se trunca a dos decimales antes de serializarse; el servidor clasifica exactamente ese valor recibido y no vuelve a redondearlo. Por ello, cerca de 20 y 50 cm la clasificación corresponde al valor truncado transmitido, y las pruebas físicas deben conservar tanto la lectura local como la línea `DISTANCE` enviada. El sensor no clasifica DANGER/WARNING/SAFE. `main.cpp`, no una clase de red, coordina ambas instancias con `wifiConnected`.
 
-El montaje obligatorio conserva el divisor de protección: **ECHO → 1 kΩ → GPIO19** y **GPIO19 → 2 kΩ → GND**, con GND común y VCC del HC-SR04 a 5 V. La compilación no valida el montaje ni la medición física; esos resultados se mantienen pendientes hasta contar con logs crudos.
+El montaje obligatorio conserva el divisor de protección: **ECHO → 1 kΩ → GPIO19** y **GPIO19 → 2 kΩ → GND**, con GND común y VCC del HC-SR04 a 5 V. La compilación no valida por sí sola el montaje ni la medición física; los registros CSV de las pruebas físicas se conservan en `tests/evidence/` y no sustituyen evidencias complementarias que no estén disponibles.
 
-El actuador se implementó en `ESP32 actuador/`: `LedController` recibe GPIO25, GPIO26 y GPIO27 por constructor, inicia en `INVALID`, mantiene exclusividad y usa `millis()` para rojo 150/150 ms y amarillo 500/500 ms sin reiniciar fase ante un `SET` repetido. `TcpActuatorClient` registra `REGISTER ACTUATOR`, espera `OK`, acepta solo `SET DANGER|WARNING|SAFE|INVALID`, aplica el estado y envía `ACK` después. Si pierde WiFi/TCP o pasan 1,5 s sin `SET` válido, ordena `INVALID`; reintenta cada 2 s. Su `WiFiSecrets.example.h` contiene el marcador `REPLACE_WITH_PC_IPV4`, no una IPv4 real: se completa únicamente en el `WiFiSecrets.h` local ignorado siguiendo la configuración común de ambos ESP32. La compilación PlatformIO fue exitosa (RAM 7.7 %, flash 27.8 %); las pruebas físicas y Unity en placa siguen pendientes.
+El actuador se implementó en `ESP32 actuador/`: `LedController` recibe GPIO25, GPIO26 y GPIO27 por constructor, inicia en `INVALID`, mantiene exclusividad y usa `millis()` para rojo 150/150 ms y amarillo 500/500 ms sin reiniciar fase ante un `SET` repetido. `TcpActuatorClient` registra `REGISTER ACTUATOR`, espera `OK`, acepta solo `SET DANGER|WARNING|SAFE|INVALID`, aplica el estado y envía `ACK` después. Si pierde WiFi/TCP o pasan 1,5 s sin `SET` válido, ordena `INVALID`; reintenta cada 2 s. Su `WiFiSecrets.example.h` contiene el marcador `REPLACE_WITH_PC_IPV4`, no una IPv4 real: se completa únicamente en el `WiFiSecrets.h` local ignorado siguiendo la configuración común de ambos ESP32. La compilación normal PlatformIO verificada el 13 de octubre de 2026 terminó correctamente (RAM 7,7 %, flash 27,8 %); los resultados de pruebas físicas disponibles se registran en los CSV de `tests/evidence/`, mientras que Unity en placa sigue pendiente.
 
 ## 4. Pruebas y validaciones
 
-Los procedimientos reproducibles de integración física, con preparación, pasos, criterios PASS/FAIL y evidencia por caso, están en [tests/manual/README.md](tests/manual/README.md); la ficha de ejecución es [plantilla-resultados.md](tests/manual/plantilla-resultados.md). La suite automatizada con sus comandos está en [tests/automated/README.md](tests/automated/README.md). Las evidencias futuras deben guardarse según [tests/evidence/README.md](tests/evidence/README.md). La verificación estática de configuración WiFi se ejecuta sin credenciales ni hardware y no sustituye la integración física. El resultado automatizado local registrado es **24 aprobadas, 0 fallidas**; ambos firmwares WiFi/TCP cuentan con compilación PlatformIO registrada. Unity en placa, pruebas físicas, logs, fotos y videos de hardware permanecen pendientes.
+Los procedimientos M-01 a M-11, sus criterios y sus evidencias esperadas están en [tests/manual/README.md](tests/manual/README.md). Los resultados físicos confirmados por el equipo se conservan en los once CSV inventariados en [tests/evidence/README.md](tests/evidence/README.md). Las métricas siguientes se calcularon a partir de esos archivos; no se añadieron resultados que no figuren en ellos.
+
+| Alcance | Registro | Resultado resumido |
+|---|---|---|
+| Medición de distancia (RF1) | [RF1_medicion_distancia.csv](tests/evidence/sensor/RF1_medicion_distancia.csv) | 60 lecturas en referencias de 2, 10, 20, 50, 75 y 100 cm; 54 se registran como VALID y 6 como OUT_OF_RANGE. El mayor error absoluto registrado es 0,45 cm. |
+| Clasificación (RF2) | [RF2_clasificacion_servidor.csv](tests/evidence/tcp/RF2_clasificacion_servidor.csv) | 11 de 11 casos coinciden con el estado esperado, incluidos los límites 2, 20, 50 y 100 cm. |
+| Actuación (RF3) | [RF3_actuador_estados.csv](tests/evidence/actuator/RF3_actuador_estados.csv) | DANGER: 152/149 ms; WARNING: 503/498 ms; SAFE fijo e INVALID apagado. Los cuatro registros incluyen el ACK correspondiente y exclusividad de LEDs. |
+| Flujo TCP y autoridad (RF4, RF6) | [RF4_comunicacion_tcp.csv](tests/evidence/tcp/RF4_comunicacion_tcp.csv), [RF6_autoridad_clasificacion.csv](tests/evidence/tcp/RF6_autoridad_clasificacion.csv) | Se registran cinco pasos REGISTER/OK/DISTANCE/SET/ACK y tres casos donde el servidor clasifica y el actuador aplica el SET. |
+| Continuidad e inválidos (RF5, RF7) | [RF5_operacion_continua.csv](tests/evidence/stability/RF5_operacion_continua.csv), [RF7_mensajes_malformados.csv](tests/evidence/tcp/RF7_mensajes_malformados.csv) | Siete observaciones de operación continua sin bloqueo y seis mensajes inválidos con ERROR, conexión conservada y recuperación posterior. |
+| Estabilidad (RNF1) | [RNF1_estabilidad_10min.csv](tests/evidence/stability/RNF1_estabilidad_10min.csv) | 11 puntos desde 0 hasta 600 s; las columnas registran cero reinicios, bloqueos y desconexiones no recuperadas. |
+| Exactitud (RNF2) | [RNF2_exactitud.csv](tests/evidence/accuracy/RNF2_exactitud.csv) | 50 mediciones en 10, 20, 50, 75 y 100 cm; máximo error absoluto 0,66 cm y promedio 0,345 cm, bajo el límite de 3 cm. |
+| Latencia (RNF3) | [RNF3_latencia_extremo_a_extremo.csv](tests/evidence/latency/RNF3_latencia_extremo_a_extremo.csv) | 10 transiciones; mínimo 40 ms, máximo 72 ms y promedio 59,5 ms, frente al límite de 1000 ms. |
+| Muestreo (RNF4) | [RNF4_frecuencia_muestreo.csv](tests/evidence/sampling/RNF4_frecuencia_muestreo.csv) | 307 intentos en 60 s: 305 válidos, 2 inválidos y promedio de 5,117 intentos/s. |
+
+La validación automatizada ejecutada localmente comprende 24 pruebas pytest aprobadas para clasificación, parser, registro de roles, fragmentación, expiración, reconexión y mensajes inválidos. La compilación normal de ambos firmwares fue verificada el 13 de octubre de 2026. Estas comprobaciones son distintas de los resultados físicos: las primeras fueron ejecutadas localmente durante la revisión; los CSV físicos son registros proporcionados y confirmados por el equipo. Unity en placa y evidencias complementarias no incluidas —por ejemplo, fotos, vídeos o logs crudos— no se declaran disponibles.
 
 ## 5. Resultados
 
-5.1. Resultados de implementación
+### 5.1 Implementación y compilación
 
-Se desarrollaron los tres componentes principales de la arquitectura distribuida:
+El sistema separa adquisición, control y actuación: el ESP32 sensor mide y envía la lectura; el servidor Python valida y clasifica; el ESP32 actuador representa exclusivamente el estado recibido. La compilación normal de ambos proyectos PlatformIO finalizó correctamente.
 
-    ESP32 sensor: implementación del controlador ultrasónico HC-SR04, adquisición periódica de distancias y cliente de comunicación WiFi/TCP.
+| Componente | Verificación | Resultado |
+|---|---|---|
+| Firmware ESP32 sensor | `pio run -e esp32doit-devkit-v1`, 13-Oct-2026 | Exitosa; RAM 7,7 %, flash 27,8 %. |
+| Firmware ESP32 actuador | `pio run -e esp32doit-devkit-v1`, 13-Oct-2026 | Exitosa; RAM 7,7 %, flash 27,8 %. |
+| Servidor TCP | Suite automatizada pytest | 24 pruebas aprobadas. |
+| Pruebas físicas | Once CSV en `tests/evidence/` | Resultados resumidos en §4 y trazados a RF/RNF. |
 
-    Servidor TCP: implementación de recepción de mensajes, validación del protocolo, clasificación de distancias y transmisión de comandos.
+### 5.2 Análisis de resultados físicos
 
-    ESP32 actuador: implementación del controlador de tres LEDs y recepción de comandos TCP para representar los estados de proximidad.
+Los resultados cubren los límites de clasificación y los estados del actuador. En el registro de RF1 aparecen seis lecturas OUT_OF_RANGE alrededor de referencias extremas; el archivo las conserva con su estado original y no identifica su causa. En cambio, el conjunto específico de exactitud RNF2 contiene 50 mediciones dentro de su criterio y un máximo de 0,66 cm. La diferencia evidencia por qué la condición de validez y la exactitud deben analizarse como métricas separadas.
 
-El diseño separa la adquisición de datos, el procesamiento central y la actuación, permitiendo que cada componente cumpla una responsabilidad específica.
-5.2. Resultados de compilación y pruebas automatizadas
-Componente	Verificación registrada	Resultado
-Firmware ESP32 sensor	Compilación PlatformIO	Exitosa
-Firmware ESP32 actuador	Compilación PlatformIO	Exitosa
-Servidor TCP	Suite automatizada pytest	24 pruebas aprobadas
-Integración física completa	Verificación con hardware	Pendiente
-Requerimientos no funcionales	Mediciones físicas	Pendiente
+La latencia máxima registrada fue 72 ms, con un margen de 928 ms respecto al límite declarado de 1 s. El muestreo promedió 5,117 intentos/s: supera tanto el objetivo de 5/s como la referencia docente de 2/s, aunque se registraron dos intentos inválidos dentro de los 307 intentos. La estabilidad alcanza exactamente los 600 s declarados sin reinicios, bloqueos ni desconexiones no recuperadas en el CSV correspondiente.
 
-Las compilaciones registradas permiten verificar que los proyectos de firmware superaron el proceso de construcción en sus respectivos entornos.
-
-Asimismo, la ejecución automatizada del servidor registró 24 pruebas aprobadas y ninguna fallida.
-5.3. Resultados del diseño de control
-
-Se estableció un algoritmo de clasificación centralizado con tres estados operativos: DANGER, WARNING y SAFE.
-
-Cada estado corresponde a un comportamiento específico del actuador, mientras que INVALID permite representar lecturas incorrectas o determinadas condiciones de pérdida de comunicación.
-
-El sistema incorpora mecanismos de seguridad como la invalidación de mediciones, la desconexión de clientes y la actualización periódica del estado.
-
-Estos mecanismos están implementados en el código documentado y forman parte de los escenarios contemplados para la validación integral.
+Los registros de TCP documentan tanto el flujo normal como el tratamiento de seis entradas inválidas. El servidor mantiene la conexión y permite una operación válida posterior según esos registros, coherente con el parser y el manejo de roles implementados.
 
 ## 6. Conclusiones
 
-En conclusión, el desarrollo de esta práctica permitió aplicar e integrar conocimientos fundamentales sobre redes TCP/IP, programación orientada a objetos, arquitectura cliente-servidor y comunicación entre objetos inteligentes mediante WiFi. A través de la implementación del sistema, se logró establecer una arquitectura distribuida en la que el sensor ultrasónico obtiene las mediciones de distancia, el servidor TCP procesa la información y determina el estado correspondiente, mientras que el objeto actuador ejecuta las acciones mediante indicadores LED. Asimismo, el proyecto permitió comprender la importancia de una comunicación organizada, la distribución de responsabilidades y el uso de protocolos de aplicación para garantizar un intercambio adecuado de información. Finalmente, esta experiencia contribuyó al fortalecimiento de habilidades prácticas en el diseño, programación e integración de sistemas inteligentes, demostrando la aplicación de los conceptos teóricos en el desarrollo de una solución tecnológica.
+La práctica implementa una arquitectura TCP/IP distribuida con responsabilidades separadas: el sensor adquiere y comunica datos, el servidor centraliza la clasificación y el actuador aplica el comando recibido. El código, los diagramas y el protocolo son coherentes con esta separación; el actuador no clasifica distancias y el servidor conserva la autoridad sobre DANGER, WARNING, SAFE e INVALID.
+
+Los registros físicos confirmados por el equipo respaldan los rangos de clasificación, los cuatro estados del actuador, el flujo TCP, la recuperación ante mensajes inválidos y los cuatro atributos no funcionales declarados. En particular, los CSV registran 0,66 cm como error absoluto máximo, 72 ms como latencia máxima, 5,117 intentos/s de promedio y 600 s sin los incidentes contados por la prueba de estabilidad.
+
+Los resultados también muestran lecturas OUT_OF_RANGE y dos intentos inválidos de muestreo. No se eliminan del análisis: confirman que el sistema conserva una ruta explícita para condiciones inválidas. Los CSV disponibles no permiten atribuir una causa física concreta a esas observaciones ni sustituyen evidencias complementarias ausentes.
 
 ## 7. Recomendaciones
 
-Se recomienda realizar la integración física de los dos ESP32 y el servidor TCP utilizando una misma red WiFi, verificando el registro de los clientes y el intercambio correcto de mensajes.
+En futuras ejecuciones se recomienda conservar junto a cada CSV los logs crudos, fotografías o vídeos que el equipo decida producir, identificando versión de firmware, fecha, responsable y condiciones de prueba. Estos elementos complementarían la trazabilidad existente sin reemplazar las filas originales de los CSV.
 
-Es importante comprobar las conexiones eléctricas del sensor ultrasónico HC-SR04, especialmente el divisor de tensión utilizado en el pin ECHO, con la finalidad de proteger las entradas del ESP32.
+Debe mantenerse el divisor de tensión ECHO → 1 kΩ → GPIO19 y GPIO19 → 2 kΩ → GND, además de las resistencias de 220 Ω de los LEDs y la tierra común. La verificación visual del montaje debe acompañar cualquier modificación física posterior.
 
-Asimismo, se recomienda efectuar mediciones en diferentes distancias, incluyendo los límites de cada rango, para verificar la exactitud del sensor y el comportamiento de los actuadores.
-
-Para evaluar los requerimientos no funcionales, se deben registrar tiempos de respuesta, frecuencia de muestreo y períodos de funcionamiento continuo mediante herramientas de monitoreo y registros de ejecución.
-
-Finalmente, se recomienda conservar las evidencias de las pruebas y mantener la estructura modular del código, facilitando futuras mejoras, como incorporar nuevos sensores, ampliar la cantidad de actuadores o implementar herramientas de monitoreo en tiempo real.
+Como mejora futura, las mediciones cercanas a 2, 20, 50 y 100 cm pueden repetirse y conservarse por separado para estudiar la variación alrededor de los límites, sin cambiar la política actual de clasificación. También conviene completar y conservar la ejecución Unity en placa cuando esté disponible.
 ## 8. Anexos y trazabilidad
 
 | Artefacto | Cubre | Estado |
 |---|---|---|
-| [Arquitectura y diagramas](diagramas/arquitectura.md) | RF1–RF7, protocolo y hardware | Diseñado; no validado |
-| [Pruebas manuales](tests/manual/README.md) | RF1–RF7, RNF1–RNF4 | Planificado |
-| [Pruebas automatizadas](tests/automated/README.md) | Sensor, clasificación y protocolo | Planificado |
-| [Evidencias](tests/evidence/README.md) | Resultados y trazabilidad | Estructura vacía |
+| [Arquitectura y diagramas](diagramas/arquitectura.md) | RF1–RF7, protocolo y hardware | Coherente con el código revisado; el montaje se respalda por confirmación del equipo y CSV, sin fotos incluidas. |
+| [Pruebas manuales](tests/manual/README.md) | RF1–RF7, RNF1–RNF4 | Procedimientos documentados; resultados físicos resumidos en §4. |
+| [Pruebas automatizadas](tests/automated/README.md) | Sensor, clasificación y protocolo | 24 pruebas pytest ejecutadas localmente; Unity en placa no declarada disponible. |
+| [Evidencias](tests/evidence/README.md) | Resultados y trazabilidad | Once CSV de resultados de pruebas físicas, relacionados con RF1–RF7 y RNF1–RNF4. |

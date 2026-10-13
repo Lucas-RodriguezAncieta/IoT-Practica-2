@@ -20,7 +20,25 @@ Las pruebas permiten evaluar la adquisición de distancias, el procesamiento de 
 | stability | Verificación de estabilidad durante funcionamiento continuo | RNF1 |
 | tcp | Pruebas de comunicación cliente-servidor y protocolo de aplicación | RF2, RF4, RF6, RF7 |
 
-## 3. Criterios de evaluación
+## 3. Registros CSV de pruebas físicas
+
+Los CSV siguientes contienen registros de resultados obtenidos durante las pruebas físicas del proyecto, según confirmación del equipo. Se conservaron nombres y filas de datos; sus encabezados se normalizaron a nombres técnicos. Cada archivo se relaciona con el requisito y caso de prueba indicados; los resultados, estados y valores que contiene deben interpretarse únicamente en el alcance documentado por sus propias columnas. Esta carpeta no afirma la existencia de fotografías, vídeos, logs u otras evidencias que no estén incluidos.
+
+| Archivo | Ubicación | Caso o requisito relacionado |
+|---|---|---|
+| `RF1_medicion_distancia.csv` | `sensor/` | RF1; M-02 y M-03 |
+| `RF2_clasificacion_servidor.csv` | `tcp/` | RF2; M-02 |
+| `RF3_actuador_estados.csv` | `actuator/` | RF3; M-04 |
+| `RF4_comunicacion_tcp.csv` | `tcp/` | RF4; M-01 |
+| `RF5_operacion_continua.csv` | `stability/` | RF5; M-04, M-05 y M-07 |
+| `RF6_autoridad_clasificacion.csv` | `tcp/` | RF6; M-01 y M-02 |
+| `RF7_mensajes_malformados.csv` | `tcp/` | RF7; M-11 |
+| `RNF1_estabilidad_10min.csv` | `stability/` | RNF1; M-07 |
+| `RNF2_exactitud.csv` | `accuracy/` | RNF2; M-03 |
+| `RNF3_latencia_extremo_a_extremo.csv` | `latency/` | RNF3; M-08 |
+| `RNF4_frecuencia_muestreo.csv` | `sampling/` | RNF4; M-06 |
+
+## 4. Criterios de evaluación
 
 Para considerar satisfactorio el funcionamiento del sistema se establecieron los siguientes parámetros:
 
@@ -31,7 +49,7 @@ Para considerar satisfactorio el funcionamiento del sistema se establecieron los
 - Clasificación correcta de los estados DANGER, WARNING, SAFE e INVALID.
 - Comunicación mediante sockets TCP sobre WiFi IEEE 802.11.
 
-## 4. Registro de las pruebas
+## 5. Registro de las pruebas
 
 Cada ejecución se documenta indicando:
 
@@ -46,7 +64,7 @@ Cada ejecución se documenta indicando:
 - Evidencias originales.
 - Incidentes y desviaciones.
 
-## 5. Trazabilidad y conservación
+## 6. Trazabilidad y conservación
 
 Las pruebas deben conservar sus registros originales, incluyendo logs, archivos CSV, fotografías y vídeos.
 

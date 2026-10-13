@@ -90,7 +90,7 @@ Materiales: PC con Python y PlatformIO, dos cables USB de datos, dos ESP32, HC-S
 ### M-10 — Validación automática y compilación
 
 - Requisitos: soporte RF1–RF4. Materiales: PC, Python, PlatformIO y placa solo para Unity. Preparación: no crear ni exponer secretos.
-- Pasos: ejecutar `python tests/automated/check_wifi_secrets_config.py`; desde raíz ejecutar `Server TCP\\.venv\\Scripts\\python.exe -m pytest tests/automated -q`; en cada proyecto `pio run -e esp32doit-devkit-v1`; con placa, `pio test -e esp32doit-devkit-v1` donde corresponda.
+- Pasos: ejecutar `python tests/automated/check_wifi_secrets_config.py`; desde raíz ejecutar `Server TCP\\.venv\\Scripts\\python.exe -m pytest tests/automated -q`; en cada proyecto `pio run -e esp32doit-devkit-v1`; con placa, ejecutar Unity con `pio test -e esp32doit-devkit-v1` en sensor y `pio test -e esp32doit-devkit-v1-test` en actuador.
 - Esperado: cada comando termina código 0; Unity solo se marca ejecutado con salida de placa.
 - Evidencia: salidas completas en `tests/evidence/build/` y ficha del caso.
 - PASS/FAIL: PASS por subcomando con salida completa y código 0; sin placa, Unity es NO EJECUTADO, nunca PASS ficticio.

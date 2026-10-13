@@ -1,0 +1,8 @@
+﻿segundo,estado_actuador,lecturas_por_segundo,comportamiento_led,resultado_esperado,resultado,estado
+0,WARNING,5,Parpadeo continuo,Sin bloqueo,Sin bloqueo,PASS
+5,WARNING,5,Parpadeo continuo,Sin bloqueo,Sin bloqueo,PASS
+10,WARNING,5,Parpadeo continuo,Sin bloqueo,Sin bloqueo,PASS
+15,WARNING,5,Parpadeo continuo,Sin bloqueo,Sin bloqueo,PASS
+20,WARNING,5,Parpadeo continuo,Sin bloqueo,Sin bloqueo,PASS
+25,WARNING,5,Parpadeo continuo,Sin bloqueo,Sin bloqueo,PASS
+30,WARNING,5,Parpadeo continuo,Sin bloqueo,Sin bloqueo,PASS

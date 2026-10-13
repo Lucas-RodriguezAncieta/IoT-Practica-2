@@ -53,6 +53,3 @@ Desktop.ini
 # Logs efímeros; las evidencias académicas sí se conservan
 *.log
 !tests/evidence/**/*.log
-
-# Override local de BMAD; se conservan _bmad/, _bmad-output/ y .agents/
-_bmad/config.user.toml

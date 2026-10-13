@@ -1,0 +1,12 @@
+﻿minuto,tiempo_s,reinicios,bloqueos,desconexiones_no_recuperadas,observacion,estado
+0,0,0,0,0,Operación normal,PASS
+1,60,0,0,0,Operación normal,PASS
+2,120,0,0,0,Operación normal,PASS
+3,180,0,0,0,Operación normal,PASS
+4,240,0,0,0,Operación normal,PASS
+5,300,0,0,0,Operación normal,PASS
+6,360,0,0,0,Operación normal,PASS
+7,420,0,0,0,Operación normal,PASS
+8,480,0,0,0,Operación normal,PASS
+9,540,0,0,0,Operación normal,PASS
+10,600,0,0,0,Operación normal,PASS

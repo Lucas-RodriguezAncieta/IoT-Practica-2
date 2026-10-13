@@ -1,9 +1,15 @@
 # Pruebas automatizadas
 
-La etapa del sensor incluye `ESP32 sensor/test/test_ultrasonic_sensor/test_main.cpp`. Cubre la conversión `duración_us / 58.0`, los límites inclusivos de 2 y 100 cm, el timeout (duración cero), las lecturas fuera de rango y la serialización pura de `DISTANCE`/`INVALID`. Puede ejecutarse con PlatformIO y Unity en una placa de prueba:
+La etapa del sensor incluye `ESP32 sensor/test/test_main.cpp`. Cubre la conversión `duración_us / 58.0`, los límites inclusivos de 2 y 100 cm, el timeout (duración cero), las lecturas fuera de rango y la serialización pura de `DISTANCE`/`INVALID`. Puede ejecutarse con PlatformIO y Unity en una placa de prueba:
 
 ```text
 pio test -e esp32doit-devkit-v1
+```
+
+El actuador conserva un entorno de prueba separado para que Unity compile `LedController` sin sustituir el `main.cpp` del firmware normal:
+
+```text
+pio test -e esp32doit-devkit-v1-test
 ```
 
 La ejecución requiere una placa conectada; no se afirma PASS hasta conservar su salida. La compilación del firmware se verifica por separado con `pio run -e esp32doit-devkit-v1`.
@@ -31,5 +37,7 @@ La suite Python está en `test_distance_controller.py` y `test_tcp_server.py`. S
 ```text
 Server TCP\\.venv\\Scripts\\python.exe -m pytest tests/automated -q
 ```
+
+Para recrear ese entorno, instalar la dependencia declarada en `Server TCP/requirements.txt` dentro de un entorno virtual y ejecutar el mismo comando con su intérprete.
 
 El 11 de octubre de 2026 se ejecutaron 24 pruebas locales y todas aprobaron. Cubren clasificación y límites, parser, errores, registro por rol, fragmentación y concatenación de líneas TCP, expiración publicada al actuador, desconexión y re-registro de ambos roles, recuperación tras entradas inválidas y trazabilidad de `SET`/`ACK`. No sustituyen las pruebas físicas: exactitud, estabilidad de 10 minutos, frecuencia real de muestreo y tiempo extremo a extremo siguen pendientes de evidencia manual.

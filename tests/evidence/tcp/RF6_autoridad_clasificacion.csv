@@ -1,0 +1,4 @@
+﻿entrada,origen_entrada,accion_sensor,autoridad_clasificacion,estado_servidor,destino,accion_actuador,estado
+DISTANCE 10.50,Sensor,Solo informa distancia,Servidor,DANGER,Actuador,Recibe SET DANGER,PASS
+DISTANCE 30.25,Sensor,Solo informa distancia,Servidor,WARNING,Actuador,Recibe SET WARNING,PASS
+DISTANCE 70.10,Sensor,Solo informa distancia,Servidor,SAFE,Actuador,Recibe SET SAFE,PASS

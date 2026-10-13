@@ -1,0 +1,6 @@
+﻿paso,origen,destino,mensaje,resultado_esperado,resultado,estado
+1,Sensor,Servidor,REGISTER SENSOR,OK,OK,PASS
+2,Actuador,Servidor,REGISTER ACTUATOR,OK,OK,PASS
+3,Sensor,Servidor,DISTANCE 35.20,Clasifica WARNING,Clasifica WARNING,PASS
+4,Servidor,Actuador,SET WARNING,Aplica WARNING,Aplica WARNING,PASS
+5,Actuador,Servidor,ACK WARNING,ACK recibido,ACK recibido,PASS
