@@ -1,1 +1,34 @@
+# Prueba de tiempo de respuesta del sistema
 
+**Requerimiento:** RNF3 — Tiempo de respuesta extremo a extremo.
+
+## Objetivo
+Determinar el tiempo transcurrido desde la adquisición de una medición de distancia hasta la actualización del actuador correspondiente.
+
+## Procedimiento
+1. Iniciar el servidor TCP y conectar ambos ESP32.
+2. Colocar un objeto dentro de uno de los rangos establecidos.
+3. Desplazar el objeto para provocar un cambio de estado.
+4. Registrar el instante de adquisición de la nueva medición.
+5. Registrar el instante en que el actuador aplica el nuevo estado.
+6. Calcular la diferencia temporal.
+7. Repetir el procedimiento para distintas transiciones.
+
+## Registro de resultados
+
+| Transición | Tiempo obtenido (ms) | Estado |
+|---|---|---|
+| SAFE → WARNING | Pendiente | NO EJECUTADO |
+| WARNING → DANGER | Pendiente | NO EJECUTADO |
+| DANGER → SAFE | Pendiente | NO EJECUTADO |
+| SAFE → INVALID | Pendiente | NO EJECUTADO |
+
+## Criterio de aceptación
+El tiempo de respuesta extremo a extremo debe ser menor o igual a 1000 ms.
+
+Las mediciones deben obtenerse mediante registros temporalmente sincronizados o un método audiovisual verificable.
+
+## Resultado
+Pendiente de incorporar los tiempos medidos y sus evidencias.
+
+**Estado:** NO EJECUTADO (sin registros disponibles).
