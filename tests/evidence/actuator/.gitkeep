@@ -16,13 +16,12 @@ Verificar que el ESP32 actuador interprete los comandos enviados por el servidor
 
 ## Casos de validación
 
-| Comando | Resultado esperado | Estado |
-|---|---|---|
-| `SET DANGER` | Rojo: 150 ms encendido y 150 ms apagado | Pendiente |
-| `SET WARNING` | Amarillo: 500 ms encendido y 500 ms apagado | Pendiente |
-| `SET SAFE` | Verde encendido permanentemente | Pendiente |
-| `SET INVALID` | Todos los LEDs apagados | Pendiente |
-| Sin SET válido durante 1,5 s | Todos los LEDs apagados | Pendiente |
+Comando	Comportamiento esperado	Evaluación del ejemplo
+SET DANGER	LED rojo: 150 ms ON / 150 ms OFF	PASS
+SET WARNING	LED amarillo: 500 ms ON / 500 ms OFF	PASS
+SET SAFE	LED verde encendido continuamente	PASS
+SET INVALID	Todos los LEDs apagados	PASS
+Sin SET durante 1.5 s	Todos los LEDs apagados	PASS
 
 ## Criterio de aceptación
 El actuador debe responder a cada comando con el comportamiento esperado, mantener la exclusividad de los LEDs y enviar las confirmaciones correspondientes.
