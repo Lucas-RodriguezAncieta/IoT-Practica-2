@@ -1,18 +1,55 @@
 #include <Arduino.h>
 
-// put function declarations here:
-int myFunction(int, int);
+#include "LedController.h"
+#include "WiFiConnection.h"
+#include "TcpActuatorClient.h"
+
+// Pines de LEDs
+constexpr uint8_t RED_PIN = 25;
+constexpr uint8_t YELLOW_PIN = 26;
+constexpr uint8_t GREEN_PIN = 27;
+
+// Credenciales WiFi
+const char* WIFI_SSID = "TU_WIFI";
+const char* WIFI_PASSWORD = "TU_PASSWORD";
+
+// Servidor TCP
+const char* SERVER_IP = "192.168.1.50";
+constexpr uint16_t SERVER_PORT = 5000;
+
+LedController ledController(
+    RED_PIN,
+    YELLOW_PIN,
+    GREEN_PIN
+);
+
+WiFiConnection wifiConnection(
+    WIFI_SSID,
+    WIFI_PASSWORD
+);
+
+TcpActuatorClient tcpClient(
+    SERVER_IP,
+    SERVER_PORT,
+    ledController
+);
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+    Serial.begin(115200);
+
+    ledController.begin();
+    wifiConnection.begin();
+    tcpClient.begin();
+
+    Serial.println("Actuator client started");
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
+    wifiConnection.update();
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+    if (wifiConnection.isConnected()) {
+        tcpClient.update();
+    }
+
+    ledController.update();
 }
