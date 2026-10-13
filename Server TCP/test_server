@@ -1,0 +1,95 @@
+4.3. Validación del servidor TCP en Python
+
+Objetivo: Verificar el funcionamiento del servidor central desarrollado en Python, encargado de administrar las conexiones TCP, procesar las mediciones del sensor, clasificar las distancias y transmitir los comandos correspondientes al ESP32 actuador.
+
+Procedimiento de validación:
+
+Iniciar el servidor TCP en el puerto 5000 y comprobar que acepte conexiones entrantes.
+
+Verificar el registro independiente de los clientes SENSOR y ACTUATOR.
+
+Comprobar la recepción y validación de mensajes DISTANCE <valor> e INVALID.
+
+Evaluar el algoritmo de clasificación utilizando mediciones de los tres rangos definidos.
+
+Comprobar la transmisión de comandos SET al cliente actuador.
+
+Verificar el tratamiento de mensajes malformados mediante las respuestas ERROR correspondientes.
+
+Comprobar la administración de desconexiones, la actualización periódica del estado y la invalidación de lecturas cuando no se reciben datos del sensor.
+
+Ejecutar las pruebas automatizadas del servidor mediante pytest.
+
+Criterios de clasificación:
+
+Distancia recibida
+
+Estado calculado
+
+Comando enviado
+
+2 ≤ d < 20 cm
+
+DANGER
+
+SET DANGER
+
+20 ≤ d < 50 cm
+
+WARNING
+
+SET WARNING
+
+50 ≤ d ≤ 100 cm
+
+SAFE
+
+SET SAFE
+
+Lectura inválida o fuera de rango
+
+INVALID
+
+SET INVALID
+
+Resultados de las pruebas automatizadas registradas:
+
+Parámetro
+
+Resultado
+
+Lenguaje de programación
+
+Python
+
+Protocolo de transporte
+
+TCP
+
+Puerto de escucha
+
+5000
+
+Herramienta de pruebas
+
+pytest
+
+Pruebas automatizadas ejecutadas
+
+24
+
+Pruebas aprobadas
+
+24
+
+Pruebas fallidas
+
+0
+
+Estado de validación automatizada
+
+APROBADO
+
+La suite automatizada registró 24 pruebas aprobadas y ninguna fallida, proporcionando evidencia favorable sobre los componentes y comportamientos evaluados del servidor TCP.
+
+El diseño contempla la clasificación centralizada de distancias, el intercambio de mensajes, la gestión de conexiones y el manejo de errores del protocolo.
