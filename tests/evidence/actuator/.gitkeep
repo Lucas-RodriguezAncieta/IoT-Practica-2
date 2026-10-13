@@ -1,1 +1,33 @@
+# Prueba de funcionamiento del ESP32 actuador
 
+**Requerimiento:** RF3 — Control de actuadores según el rango de distancia.
+
+## Objetivo
+Verificar que el ESP32 actuador interprete los comandos enviados por el servidor TCP y controle correctamente los tres LEDs.
+
+## Procedimiento
+1. Conectar los LEDs rojo, amarillo y verde a GPIO25, GPIO26 y GPIO27.
+2. Establecer la conexión TCP con el servidor.
+3. Registrar el cliente mediante `REGISTER ACTUATOR`.
+4. Enviar cada uno de los comandos `SET`.
+5. Comprobar visualmente el comportamiento de cada LED.
+6. Verificar el envío de las respuestas `ACK`.
+7. Comprobar el apagado ante pérdida de comunicación.
+
+## Casos de validación
+
+| Comando | Resultado esperado | Estado |
+|---|---|---|
+| `SET DANGER` | Rojo: 150 ms encendido y 150 ms apagado | Pendiente |
+| `SET WARNING` | Amarillo: 500 ms encendido y 500 ms apagado | Pendiente |
+| `SET SAFE` | Verde encendido permanentemente | Pendiente |
+| `SET INVALID` | Todos los LEDs apagados | Pendiente |
+| Sin SET válido durante 1,5 s | Todos los LEDs apagados | Pendiente |
+
+## Criterio de aceptación
+El actuador debe responder a cada comando con el comportamiento esperado, mantener la exclusividad de los LEDs y enviar las confirmaciones correspondientes.
+
+## Resultado
+Pendiente de registrar la ejecución física, las respuestas ACK y las evidencias visuales.
+
+**Estado:** NO EJECUTADO (sin registros disponibles).
