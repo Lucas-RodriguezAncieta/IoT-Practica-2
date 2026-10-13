@@ -17,15 +17,13 @@ Verificar la adquisición de distancias mediante el sensor HC-SR04 y su transmis
 
 ## Casos de validación
 
-| Caso | Resultado esperado |
-|---|---|
-| Conexión WiFi | Cliente conectado a la red |
-| Registro TCP | Respuesta `OK` |
-| Medición válida | Envío de `DISTANCE <valor>` |
-| Medición inválida | Envío de `INVALID` |
-| Desconexión TCP | Reintento de conexión |
-| Recuperación | Nuevo registro del sensor |
-
+Caso	Mensaje o respuesta	Evaluación del ejemplo
+Registro del sensor	REGISTER SENSOR → OK	PASS
+Medición de proximidad	DISTANCE 10.42	PASS
+Medición intermedia	DISTANCE 34.28	PASS
+Medición segura	DISTANCE 74.34	PASS
+Lectura inválida	INVALID	PASS
+Reconexión TCP	Nuevo registro después de desconexión	PASS
 ## Criterio de aceptación
 El sensor debe obtener mediciones, transmitir los mensajes correctos y recuperar la conexión según los mecanismos establecidos.
 
