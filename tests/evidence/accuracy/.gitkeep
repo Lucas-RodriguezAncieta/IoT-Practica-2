@@ -1,1 +1,32 @@
+# Prueba de exactitud del sensor ultrasónico
 
+**Requerimiento:** RNF2 — Exactitud de medición.
+
+## Objetivo
+Verificar que las distancias obtenidas mediante el sensor ultrasónico HC-SR04 sean suficientemente precisas en comparación con una referencia física, manteniendo un error absoluto máximo de ±3 cm dentro del intervalo de 2 a 100 cm.
+
+## Procedimiento
+1. Conectar el sensor HC-SR04 al ESP32.
+2. Colocar un objeto a distancias conocidas utilizando una cinta métrica.
+3. Registrar las lecturas del sensor en cada posición.
+4. Calcular la diferencia absoluta entre la distancia real y la obtenida.
+5. Comparar los errores con el límite establecido.
+
+## Registro de mediciones
+
+| Distancia de referencia (cm) | Distancia medida (cm) | Error absoluto (cm) | Estado |
+|---|---|---|---|
+| 10 | Pendiente | Pendiente | NO EJECUTADO |
+| 20 | Pendiente | Pendiente | NO EJECUTADO |
+| 35 | Pendiente | Pendiente | NO EJECUTADO |
+| 50 | Pendiente | Pendiente | NO EJECUTADO |
+| 75 | Pendiente | Pendiente | NO EJECUTADO |
+| 100 | Pendiente | Pendiente | NO EJECUTADO |
+
+## Criterio de aceptación
+La prueba se considera aprobada cuando todas las mediciones evaluadas presentan un error absoluto menor o igual a 3 cm.
+
+## Resultado
+Pendiente de incorporar mediciones físicas y evidencias originales.
+
+**Estado:** NO EJECUTADO (sin registros disponibles).
