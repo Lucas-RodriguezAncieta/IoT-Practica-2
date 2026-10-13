@@ -15,12 +15,13 @@ Verificar que el ESP32 sensor mantenga una frecuencia de adquisición cercana al
 
 ## Parámetros
 
-| Parámetro | Valor objetivo |
-|---|---|
-| Intervalo programado | 200 ms |
-| Frecuencia objetivo | 5 Hz |
-| Duración de evaluación | 60 segundos |
-| Lecturas de referencia aproximadas | 300 |
+Parámetro	Valor del ejemplo
+Duración del ensayo	60 segundos
+Lecturas registradas	300
+Frecuencia promedio	5.00 Hz
+Intervalo promedio	200 ms
+Frecuencia objetivo	5 Hz
+Evaluación del ejemplo	PASS
 
 ## Fórmula
 
