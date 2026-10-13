@@ -1,0 +1,257 @@
+#include "TcpActuatorClient.h"
+
+#include <cstring>
+
+namespace {
+constexpr unsigned long kCommandTimeout = 1500UL;
+constexpr unsigned long kRegistrationTimeout = 2000UL;
+}
+
+TcpActuatorClient::TcpActuatorClient(
+    const char* ip,
+    uint16_t port,
+    LedController& leds,
+    unsigned long retryMs,
+    unsigned long connectTimeoutMs
+)
+    : ip_(ip),
+      port_(port),
+      leds_(leds),
+      retryMs_(retryMs),
+      timeoutMs_(connectTimeoutMs) {
+}
+
+void TcpActuatorClient::update(
+    unsigned long now,
+    bool wifiConnected
+) {
+    if (!wifiConnected) {
+        disconnect(now);
+        return;
+    }
+
+    if (client_.connected()) {
+        while (client_.available()) {
+            char c = client_.read();
+
+            if (discarding_) {
+                if (c == '\n') {
+                    discarding_ = false;
+                }
+
+                continue;
+            }
+
+            if (c == '\n') {
+                buffer_[length_] = '\0';
+
+                if (
+                    length_ &&
+                    buffer_[length_ - 1] == '\r'
+                ) {
+                    buffer_[--length_] = '\0';
+                }
+
+                processLine(buffer_, now);
+
+                length_ = 0;
+            }
+            else if (length_ >= 128) {
+                length_ = 0;
+                discarding_ = true;
+            }
+            else {
+                buffer_[length_++] = c;
+            }
+        }
+
+        if (
+            registered_ &&
+            now - lastCommand_ >= kCommandTimeout
+        ) {
+            Serial.println(
+                "[ACTUATOR] Sin comandos recientes: INVALID"
+            );
+
+            leds_.setState(
+                LedState::INVALID,
+                now
+            );
+
+            lastCommand_ = now;
+        }
+
+        if (
+            waitingOk_ &&
+            now - lastAttempt_ >= kRegistrationTimeout
+        ) {
+            disconnect(now);
+        }
+
+        return;
+    }
+
+    if (registered_ || waitingOk_) {
+        Serial.println(
+            "[ACTUATOR] TCP desconectado"
+        );
+
+        disconnect(now);
+    }
+
+    if (now - lastAttempt_ < retryMs_) {
+        return;
+    }
+
+    lastAttempt_ = now;
+
+    Serial.println(
+        "[ACTUATOR] Conectando al servidor..."
+    );
+
+    if (
+        client_.connect(
+            ip_,
+            port_,
+            timeoutMs_
+        )
+    ) {
+        Serial.println(
+            "[ACTUATOR] TCP conectado"
+        );
+
+        waitingOk_ = true;
+
+        sendLine("REGISTER ACTUATOR");
+    }
+}
+
+void TcpActuatorClient::processLine(
+    const char* line,
+    unsigned long now
+) {
+    if (
+        waitingOk_ &&
+        std::strcmp(line, "OK") == 0
+    ) {
+        waitingOk_ = false;
+        registered_ = true;
+
+        Serial.println(
+            "[ACTUATOR] Registro aceptado"
+        );
+
+        return;
+    }
+
+    if (
+        !registered_ ||
+        std::strncmp(line, "SET ", 4) != 0
+    ) {
+        Serial.print(
+            "[ACTUATOR] Mensaje ignorado: "
+        );
+
+        Serial.println(line);
+
+        return;
+    }
+
+    LedState state;
+
+    const char* value = line + 4;
+
+    if (
+        std::strcmp(value, "DANGER") == 0
+    ) {
+        state = LedState::DANGER;
+    }
+    else if (
+        std::strcmp(value, "WARNING") == 0
+    ) {
+        state = LedState::WARNING;
+    }
+    else if (
+        std::strcmp(value, "SAFE") == 0
+    ) {
+        state = LedState::SAFE;
+    }
+    else if (
+        std::strcmp(value, "INVALID") == 0
+    ) {
+        state = LedState::INVALID;
+    }
+    else {
+        return;
+    }
+
+    Serial.print(
+        "[ACTUATOR] Recibido: "
+    );
+
+    Serial.println(line);
+
+    leds_.setState(
+        state,
+        now
+    );
+
+    lastCommand_ = now;
+
+    Serial.print(
+        "[ACTUATOR] Estado aplicado: "
+    );
+
+    Serial.println(value);
+
+    char ack[20];
+
+    snprintf(
+        ack,
+        sizeof(ack),
+        "ACK %s",
+        value
+    );
+
+    if (sendLine(ack)) {
+        Serial.print(
+            "[ACTUATOR] Enviado: "
+        );
+
+        Serial.println(ack);
+    }
+}
+
+bool TcpActuatorClient::sendLine(
+    const char* line
+) {
+    size_t n = std::strlen(line);
+
+    if (
+        !client_.connected() ||
+        client_.print(line) != n ||
+        client_.print('\n') != 1
+    ) {
+        disconnect(millis());
+        return false;
+    }
+
+    return true;
+}
+
+void TcpActuatorClient::disconnect(
+    unsigned long now
+) {
+    client_.stop();
+
+    registered_ = false;
+    waitingOk_ = false;
+
+    length_ = 0;
+    discarding_ = false;
+
+    leds_.setState(
+        LedState::INVALID,
+        now
+    );
+}
